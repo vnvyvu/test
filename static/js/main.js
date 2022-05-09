@@ -1,5 +1,5 @@
-const TRANSLATE_TEXT_URL = 'https://libretranslate.com/translate';
-const TRANSLATE_FILE_URL = 'https://libretranslate.com/translate_file';
+const TRANSLATE_TEXT_URL = 'http://nmtuet.ddns.net:1715/translate_paragraphs';
+const TRANSLATE_FILE_URL = 'http://nmtuet.ddns.net:1715/translate_paragraphs';
 const LANGUAGES_URL = 'https://libretranslate.de/languages';
 
 $(document).ready(async function () {
@@ -36,18 +36,23 @@ $(document).ready(async function () {
 	function translate(text) {
 		fetch(TRANSLATE_TEXT_URL, {
 			method: 'POST',
+
 			body: JSON.stringify({
-				q: text,
-				source: selectFromE.val(),
-				target: selectToE.val(),
+				data: text,
+				direction: selectFromE.val() + '-' + selectToE.val(),
 			}),
 			headers: {
 				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
 			},
 		})
-			.then((data) => {
+			.then((response) => response.json())
+			// .then(result => alert(JSON.stringify(result, null, 2)))
+			.then((result) => {
 				// After call API success
-				$('#textarea-to').val(data.json().translatedText);
+				// console.log(JSON.stringify(result, null, 2))
+				// console.log(result["data"]["data"])
+				$('#textarea-to').val(result['data']['data']);
 			})
 			.catch(() => {
 				$('#textarea-to').val(
